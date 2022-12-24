@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"elma_hw_stat/internal/models"
+	"elma_hw_2/internal/models"
 	"time"
 )
 

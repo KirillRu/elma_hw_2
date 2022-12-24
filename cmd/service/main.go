@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"elma_hw_stat/internal/actions"
-	"elma_hw_stat/internal/models"
+	"elma_hw_2/internal/actions"
+	"elma_hw_2/internal/models"
 	"fmt"
 	"math/rand"
 	"time"
