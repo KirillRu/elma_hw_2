@@ -4,12 +4,22 @@ import (
 	"context"
 	"elma_hw_2/internal/actions"
 	"elma_hw_2/internal/models"
+	"elma_hw_2/internal/services"
 	"fmt"
 	"math/rand"
+	"net/http"
 	"time"
 )
 
 func main() {
+	server := services.New()
+	err := http.ListenAndServe("localhost:3000", server.BuildRoutes())
+	if err != nil {
+		panic(err)
+	}
+}
+
+func _main() {
 	users := []string{
 		"Кирилл",
 		"Алексей",
