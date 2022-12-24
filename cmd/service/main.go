@@ -15,13 +15,15 @@ func main() {
 		"Алексей",
 		"Анна",
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
 	defer cancel()
 
 	go MergeData(ctx)
 
 	for _, face := range users {
-		go buyProcess(face)
+		go func(face string) {
+			buyProcess(face)
+		}(face)
 	}
 	<-ctx.Done()
 }
@@ -29,28 +31,28 @@ func main() {
 func buyProcess(face string) {
 	userId := actions.Reg(face)
 	user, err := actions.GetUserById(userId)
+
 	if err != nil {
-		fmt.Println(err.Error())
+		return
 	}
 	cart, err := actions.TakeBasket(user)
 	if err != nil {
-		fmt.Println(err.Error())
+		return
 	}
 
-	var countProducts = rand.Intn(5) + 1 // Объявление и инициализация
+	var countProducts = rand.Intn(5) + 1
 
 	for countProducts > 0 { // Условие
 		p := actions.GetRandomProduct()
 		err = cart.IntoCart(p, uint(rand.Intn(10)+1))
 		if err != nil {
-			fmt.Println(err.Error())
+			//fmt.Println(err.Error())
 		}
-		fmt.Printf("\n\n%+v\n\n", p)
-		countProducts-- // Обратный отсчет; в противном случае цикл будет длиться вечно
+		countProducts--
 	}
 	err = actions.Buy(user)
 	if err != nil {
-		fmt.Println(err.Error())
+		//fmt.Println(err.Error())
 	}
 }
 

@@ -18,6 +18,6 @@ type Order struct {
 	Date       time.Time     `json:"date"`
 }
 
-func (o Order) Log(message string) {
-	OrderUpdatesCh <- fmt.Sprintf("Order: %d for the user: %d, message: %s", o.Id, o.UserId, message)
+func (o *Order) Log(message string) {
+	OrderUpdatesCh <- fmt.Sprintf("Order: %s for the user: %s, message: %s", o.Id, o.UserId, message)
 }

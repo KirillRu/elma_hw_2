@@ -14,6 +14,6 @@ func init() {
 	UserUpdatesCh = make(chan string)
 }
 
-func (user User) Log(message string) {
-	UserUpdatesCh <- fmt.Sprintf("User:%s (%d), message: %s", user.Face, user.Id, message)
+func (user *User) Log(message string) {
+	UserUpdatesCh <- fmt.Sprintf("User:%s (%s), message: %s", user.Face, user.Id, message)
 }

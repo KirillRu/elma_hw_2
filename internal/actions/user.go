@@ -5,24 +5,29 @@ import (
 	"errors"
 )
 
-var users = make(map[models.Uuid]models.User)
+var users = make(map[models.Uuid]*models.User)
 
-var lastUserId models.Uuid = 0
+var lastUserId models.Uuid
 
-func GetUserById(userId models.Uuid) (models.User, error) {
+func GetUserById(userId models.Uuid) (*models.User, error) {
 	if user, ok := users[userId]; ok {
 		return user, nil
 	}
-	return models.User{}, errors.New("Client not found")
+	return nil, errors.New("Client not found")
 }
 
 func Reg(face string) models.Uuid {
 	lastUserId = lastUserId.NextNumber()
-	users[lastUserId] = models.User{
+	user := models.User{
 		Id:        lastUserId,
 		Face:      face,
 		Purchases: 0,
 	}
-	users[lastUserId].Log("Регистрация")
-	return lastUserId
+	users[lastUserId] = &user
+	users[user.Id].Log("Регистрация")
+	return user.Id
+}
+
+func GetUsers() map[models.Uuid]*models.User {
+	return users
 }

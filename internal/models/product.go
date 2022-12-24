@@ -19,17 +19,19 @@ func init() {
 	ProductUpdatesCh = make(chan string)
 }
 
-func (p Product) Log(message string) {
-	ProductUpdatesCh <- fmt.Sprintf("Product:%s (%d), message: %s", p.Name, p.Id, message)
+func (p *Product) Log(message string) {
+	ProductUpdatesCh <- fmt.Sprintf("Product:%s (%s), message: %s", p.Name, p.Id, message)
 }
 
-func (p Product) Buy(quantity uint) (Сost, error) {
+func (p *Product) Buy(quantity uint) (Сost, error) {
 	if p.Quantity < quantity {
+		p.Log("Not enough product")
 		return Сost{}, errors.New("Not enough product")
 	}
-	//if p.Reserved < quantity {
-	//	return Сost{}, errors.New("Something went wrong")
-	//}
+	if p.Reserved < quantity {
+		p.Log("Something went wrong")
+		return Сost{}, errors.New("Something went wrong")
+	}
 	p.Quantity -= quantity
 	p.Reserved -= quantity
 	//p.Log()
@@ -39,8 +41,9 @@ func (p Product) Buy(quantity uint) (Сost, error) {
 	}, nil
 }
 
-func (p Product) IntoCart(quantity uint) error {
+func (p *Product) IntoCart(quantity uint) error {
 	if p.Quantity < quantity+p.Reserved {
+		p.Log("Not enough product")
 		return errors.New("Not enough product")
 	}
 	p.Reserved += quantity

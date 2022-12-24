@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-var Orders []models.Order
-var lastOrderId models.Uuid = 0
+var Orders []*models.Order
+var lastOrderId models.Uuid
 
-func Buy(u models.User) error {
+func Buy(u *models.User) error {
 	if c, ok := Baskets[u.Id]; ok {
 		if len(c.ProductIds) < 1 {
 			return errors.New("There are no products in the basket")
 		}
 		lastOrderId = lastOrderId.NextNumber()
-		order := models.Order{
+		order := &models.Order{
 			Id:         lastOrderId,
 			UserId:     u.Id,
 			Date:       time.Now(),

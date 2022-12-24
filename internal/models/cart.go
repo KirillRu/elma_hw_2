@@ -18,7 +18,7 @@ type Cart struct {
 	Date       time.Time     `json:"date"`
 }
 
-func (c Cart) IntoCart(p Product, quantity uint) error {
+func (c *Cart) IntoCart(p *Product, quantity uint) error {
 	err := p.IntoCart(quantity)
 	if err != nil {
 		return err
@@ -30,15 +30,15 @@ func (c Cart) IntoCart(p Product, quantity uint) error {
 		c.ProductIds[p.Id] = quantity
 	}
 	c.Date = time.Now()
-	c.Log(fmt.Sprintf("The customer put the product %s (%d) in the basket", p.Name, p.Id))
+	c.Log(fmt.Sprintf("The customer put the product %s (%s) in the basket", p.Name, p.Id))
 	return nil
 }
 
-func (c Cart) Clear() {
+func (c *Cart) Clear() {
 	c.ProductIds = map[Uuid]uint{}
 	c.Log("The basket is cleared")
 }
 
-func (c Cart) Log(message string) {
-	UserUpdatesCh <- fmt.Sprintf("Cart: %d for the user: %d, message: %s", c.Id, c.UserId, message)
+func (c *Cart) Log(message string) {
+	UserUpdatesCh <- fmt.Sprintf("Cart: %s for the user: %s, message: %s", c.Id, c.UserId, message)
 }

@@ -1,6 +1,8 @@
 package models
 
-type Uuid uint64
+import "github.com/google/uuid"
+
+type Uuid string
 
 type Сost struct {
 	Price    float64 `json:"price"`
@@ -8,14 +10,5 @@ type Сost struct {
 }
 
 func (id Uuid) NextNumber() Uuid {
-	id++
-	return id
+	return Uuid(uuid.New().String())
 }
-
-//type Statistic interface {
-//	Log(message string)
-//}
-//
-//func Log(stat Statistic, message string) {
-//	stat.Log(message)
-//}

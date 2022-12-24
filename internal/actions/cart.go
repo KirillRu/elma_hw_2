@@ -5,15 +5,15 @@ import (
 	"time"
 )
 
-var Baskets = make(map[models.Uuid]models.Cart)
-var lastCartId models.Uuid = 0
+var Baskets = make(map[models.Uuid]*models.Cart)
+var lastCartId models.Uuid
 
-func TakeBasket(u models.User) (models.Cart, error) {
+func TakeBasket(u *models.User) (*models.Cart, error) {
 	if c, ok := Baskets[u.Id]; ok {
 		return c, nil
 	}
 	lastCartId = lastCartId.NextNumber()
-	Baskets[u.Id] = models.Cart{
+	Baskets[u.Id] = &models.Cart{
 		Id:         lastCartId,
 		UserId:     u.Id,
 		Date:       time.Now(),

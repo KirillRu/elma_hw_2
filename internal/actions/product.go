@@ -6,14 +6,14 @@ import (
 	"math/rand"
 )
 
-var Warehouse = make(map[models.Uuid]models.Product)
-var lastProductId models.Uuid = 0
+var Warehouse = make(map[models.Uuid]*models.Product)
+var lastProductId models.Uuid
 
 func init() {
 	inventory()
 }
 
-func GetRandomProduct() models.Product {
+func GetRandomProduct() *models.Product {
 	var num = rand.Intn(len(Warehouse))
 	for _, p := range Warehouse {
 		if num == 0 {
@@ -21,20 +21,20 @@ func GetRandomProduct() models.Product {
 		}
 		num--
 	}
-	return models.Product{}
+	return nil
 }
 
-func GetProductById(productId models.Uuid) (models.Product, error) {
+func GetProductById(productId models.Uuid) (*models.Product, error) {
 	if p, ok := Warehouse[productId]; ok {
 		return p, nil
 	}
 
-	return models.Product{}, errors.New("Product not found")
+	return nil, errors.New("Product not found")
 }
 
 func inventory() {
 	lastProductId = lastProductId.NextNumber()
-	Warehouse[lastProductId] = models.Product{
+	Warehouse[lastProductId] = &models.Product{
 		Id:       lastProductId,
 		Name:     "The handle is blue",
 		Price:    30,
@@ -43,7 +43,7 @@ func inventory() {
 	}
 
 	lastProductId = lastProductId.NextNumber()
-	Warehouse[lastProductId] = models.Product{
+	Warehouse[lastProductId] = &models.Product{
 		Id:       lastProductId,
 		Name:     "The handle is red",
 		Price:    30,
@@ -52,7 +52,7 @@ func inventory() {
 	}
 
 	lastProductId = lastProductId.NextNumber()
-	Warehouse[lastProductId] = models.Product{
+	Warehouse[lastProductId] = &models.Product{
 		Id:       lastProductId,
 		Name:     "The handle is yelow",
 		Price:    30,
@@ -61,7 +61,7 @@ func inventory() {
 	}
 
 	lastProductId = lastProductId.NextNumber()
-	Warehouse[lastProductId] = models.Product{
+	Warehouse[lastProductId] = &models.Product{
 		Id:       lastProductId,
 		Name:     "The handle is white",
 		Price:    30,
@@ -70,7 +70,7 @@ func inventory() {
 	}
 
 	lastProductId = lastProductId.NextNumber()
-	Warehouse[lastProductId] = models.Product{
+	Warehouse[lastProductId] = &models.Product{
 		Id:       lastProductId,
 		Name:     "The handle is black",
 		Price:    30,
