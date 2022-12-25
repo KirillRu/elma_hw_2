@@ -38,7 +38,7 @@ func (user *User) FromRequest(r *http.Request) {
 	user.Login = r.FormValue("login")
 	user.Password = r.FormValue("password")
 	user.Phone = r.FormValue("phone")
-	t, err := time.Parse("January/2/2006", r.FormValue("birth_date"))
+	t, err := time.Parse("01/02/2006", r.FormValue("birth_date"))
 	if err == nil {
 		user.BirthDate = t
 	} else {
