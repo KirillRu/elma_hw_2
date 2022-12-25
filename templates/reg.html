@@ -1,0 +1,27 @@
+{{define "htmlcontent"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ELMA. ДЗ. Регистрация. Сервис работы с пользователями</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+<form method="post" action="/user">
+    <div>Имя: <input type="text" value="{{.Name}}" name="name"></div>
+    <div>Телефон: <input type="text" value="{{.Phone}}" name="phone"></div>
+    <div>Дата рождения: <input type="text" value="{{.BirthDate}}" name="birth_date"></div>
+    <div>Логин: <input type="text" value="{{.Login}}" name="login"></div>
+    <div>Пароль: <input type="password" value="" name="password"></div>
+    <input type="submit" value="Зарегистрироваться">
+</form>
+<script>
+    $(function(){
+        $("input[name=birth_date]").datepicker();
+    });
+</script>
+</body>
+</html>
+{{end}}

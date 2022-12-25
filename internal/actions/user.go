@@ -6,7 +6,6 @@ import (
 )
 
 var users = make(map[models.Uuid]*models.User)
-
 var lastUserId models.Uuid
 
 func GetUserById(userId models.Uuid) (*models.User, error) {
@@ -26,6 +25,21 @@ func Reg(face string) models.Uuid {
 	users[lastUserId] = &user
 	users[user.Id].Log("Регистрация")
 	return user.Id
+}
+
+func RegByUser(user *models.User) (models.UserRespone, error) {
+	lastUserId = lastUserId.NextNumber()
+
+	user.Id = lastUserId
+	users[user.Id] = user
+	users[user.Id].Log("Регистрация")
+
+	resp := models.UserRespone{
+		User:        *user,
+		AccessToken: user.GetToken(),
+	}
+
+	return resp, nil
 }
 
 func GetUsers() map[models.Uuid]*models.User {

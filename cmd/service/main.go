@@ -12,6 +12,11 @@ import (
 )
 
 func main() {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Hour)
+	defer cancel()
+
+	go MergeData(ctx)
+
 	server := services.New()
 	err := http.ListenAndServe("localhost:3000", server.BuildRoutes())
 	if err != nil {
@@ -25,7 +30,7 @@ func _main() {
 		"Алексей",
 		"Анна",
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Hour)
 	defer cancel()
 
 	go MergeData(ctx)
