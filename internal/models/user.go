@@ -4,7 +4,11 @@ import "fmt"
 
 type User struct {
 	Id        Uuid   `json:"id"`
-	Face      string `json:"face"`
+	Name      string `json:"name"`
+	Login     string `json:"login"`
+	Password  string `json:"password"`
+	Phone     string `json:"phone"`
+	BirthDate string `json:"birth_date"`
 	Purchases uint   `json:"purchases"` //number of purchases
 }
 
@@ -15,5 +19,5 @@ func init() {
 }
 
 func (user *User) Log(message string) {
-	UserUpdatesCh <- fmt.Sprintf("User:%s (%s), message: %s", user.Face, user.Id, message)
+	UserUpdatesCh <- fmt.Sprintf("User:%s (%s), message: %s", user.Name, user.Id, message)
 }

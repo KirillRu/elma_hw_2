@@ -20,7 +20,7 @@ func Reg(face string) models.Uuid {
 	lastUserId = lastUserId.NextNumber()
 	user := models.User{
 		Id:        lastUserId,
-		Face:      face,
+		Name:      face,
 		Purchases: 0,
 	}
 	users[lastUserId] = &user

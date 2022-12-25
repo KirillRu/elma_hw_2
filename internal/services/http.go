@@ -20,6 +20,11 @@ func (s ServerImplementation) BuildRoutes() http.Handler {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		result, data, err := actions.GetMain()
+		responses.DrawPage(w, result, data, err)
+	})
+
 	r.Get("/hello_world", func(w http.ResponseWriter, r *http.Request) {
 		result, err := actions.GetHelloWorld()
 		responses.Make(w, result, err)

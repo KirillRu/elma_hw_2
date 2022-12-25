@@ -1,8 +1,11 @@
 package responses
 
 import (
+	"bytes"
 	"encoding/json"
+	"html/template"
 	"net/http"
+	"os"
 )
 
 func Make(w http.ResponseWriter, data interface{}, err error) {
@@ -25,6 +28,39 @@ func Make(w http.ResponseWriter, data interface{}, err error) {
 	}
 
 	w.Write(responseContent)
+}
+
+func DrawPage(w http.ResponseWriter, fileName string, data interface{}, err error) {
+	if err != nil {
+		makeResponseError(w, err)
+
+		return
+	}
+
+	_, err = os.Stat("d:\\web\\Projects\\Go\\src\\elma_hw_2\\templates\\" + fileName)
+	if err != nil {
+		makeResponseError(w, err)
+		//TODO:: сделать лог
+		return
+	}
+	buf := new(bytes.Buffer)
+
+	files := []string{
+		"d:\\web\\Projects\\Go\\src\\elma_hw_2\\templates\\" + fileName,
+	}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		makeResponseError(w, err)
+		//TODO:: сделать лог
+		return
+	}
+	err = ts.ExecuteTemplate(buf, "htmlcontent", data) //
+	if err != nil {
+		makeResponseError(w, err)
+		//TODO:: сделать лог
+		return
+	}
+	w.Write([]byte(buf.String()))
 }
 
 func makeResponseError(w http.ResponseWriter, err error) {
