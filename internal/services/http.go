@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"net/http"
+	"time"
 )
 
 func New() ServerImplementation {
@@ -35,12 +36,35 @@ func (s ServerImplementation) BuildRoutes() http.Handler {
 		user := &models.User{}
 		user.FromRequest(r)
 		result, err := actions.RegByUser(user)
+		expire := time.Now().Add(time.Minute * time.Duration(models.TokenLive))
+		cookie := http.Cookie{Name: "access_tocken", Value: result.AccessToken, Path: "/", Expires: expire}
+		http.SetCookie(w, &cookie)
 		responses.Make(w, result, err)
 	})
 
-	r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
+	r.Put("/user", func(w http.ResponseWriter, r *http.Request) {
+		user := &models.User{}
+		user.FromRequest(r)
+		result, err := actions.UpdateByUser(user, r)
+		responses.Make(w, result, err)
+	})
+
+	r.Get("/user/login", func(w http.ResponseWriter, r *http.Request) {
 		result, data, err := actions.GetLogin()
 		responses.DrawPage(w, result, data, err)
+	})
+
+	r.Post("/user/login", func(w http.ResponseWriter, r *http.Request) {
+		result, err := actions.GetUserByLogin(r)
+		if err != nil {
+			responses.Make(w, models.Err{ErrNo: 1, Message: err.Error()}, err)
+			return
+		}
+
+		expire := time.Now().Add(time.Minute * time.Duration(models.TokenLive))
+		cookie := http.Cookie{Name: "access_tocken", Value: result.AccessToken, Path: "/", Expires: expire}
+		http.SetCookie(w, &cookie)
+		responses.Make(w, result, err)
 	})
 
 	r.Get("/hello_world", func(w http.ResponseWriter, r *http.Request) {

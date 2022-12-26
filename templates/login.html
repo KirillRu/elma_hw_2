@@ -4,13 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <title>ELMA. ДЗ. Авторизация. Сервис работы с пользователями</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 </head>
 <body>
-<form method="post">
+<form method="post" action="/user/login" onsubmit="return false;">
     <div>Логин: <input type="text" value="" name="login"></div>
     <div>Пароль: <input type="password" value="" name="password"></div>
     <input type="submit" value="Войти">
 </form>
-</body>
+<script>
+    $(function(){
+        $("form").on('submit', function () {
+            var self = this
+            var fields = $(this).find('input[name]').get();
+
+            var params = {};
+            for (var i = 0, len = fields.length; i < len; i++) {
+                var f = fields[i];
+                params[f.name] = f.value;
+            }
+            $.post(self.getAttribute('action'), params, function(response) {
+                console.log(response)
+                if ('message' in response) {
+                    alert(response.message)
+                } else {
+                    document.location.href = '/user';
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script></body>
 </html>
 {{end}}

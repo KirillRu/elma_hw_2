@@ -23,7 +23,13 @@ type UserRespone struct {
 }
 
 var UserUpdatesCh chan string
-var jwtSecretKey = []byte("veryVerySecretKey")
+var JwtSecretKey = []byte("veryVerySecretKey")
+var TokenLive = 5
+
+type Claims struct {
+	Uid Uuid `json:"uid"`
+	jwt.RegisteredClaims
+}
 
 func init() {
 	UserUpdatesCh = make(chan string)
@@ -48,17 +54,20 @@ func (user *User) FromRequest(r *http.Request) {
 }
 
 func (user *User) GetToken() string {
-	payload := jwt.MapClaims{
-		"uid": user.Id,
-		"exp": time.Now().Add(time.Minute * 5).Unix(),
+
+	claims := Claims{
+		user.Id,
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(TokenLive))),
+			Issuer:    "test",
+		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
-
-	t, err := token.SignedString(jwtSecretKey)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	ss, err := token.SignedString(JwtSecretKey)
 	if err != nil {
 		return ""
 	}
 
-	return t
+	return ss
 }

@@ -9,17 +9,47 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
-<form method="post" action="/user">
+<form method="post" action="/user" onsubmit="return false;">
     <div>Имя: <input type="text" value="{{.Name}}" name="name"></div>
     <div>Телефон: <input type="text" value="{{.Phone}}" name="phone"></div>
-    <div>Дата рождения: <input type="text" value="{{.BirthDate}}" name="birth_date"></div>
+    <div>Дата рождения: <input type="text" value='{{.BirthDate.Format "01/02/2006"}}' name="birth_date"></div>
     <div>Логин: <input type="text" value="{{.Login}}" name="login"></div>
     <div>Пароль: <input type="password" value="" name="password"></div>
+    {{if .Id}}
+    <input type="submit" value="Сохранить">
+    {{else}}
     <input type="submit" value="Зарегистрироваться">
+    {{end}}
 </form>
 <script>
     $(function(){
         $("input[name=birth_date]").datepicker();
+        $("form").on('submit', function () {
+            var self = this
+            var fields = $(this).find('input[name]').get();
+
+            var params = {};
+            for (var i = 0, len = fields.length; i < len; i++) {
+                var f = fields[i];
+                params[f.name] = f.value;
+            }
+{{if .Id}}
+            $.ajax({
+                url: self.getAttribute('action'),
+                type: 'PUT',
+                data : params,
+                success: function(result) {
+                    console.log(result)
+                }
+            });
+{{else}}
+            $.post(self.getAttribute('action'), params, function(response) {
+                document.location.href = '/user';
+            }, 'json');
+{{end}}
+
+            return false;
+        });
     });
 </script>
 </body>
